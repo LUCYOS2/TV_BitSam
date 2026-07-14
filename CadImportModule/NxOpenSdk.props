@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--
+    Shared NX Open C++ SDK settings, imported by NxBackend.vcxproj and
+    App.vcxproj (both of which link against NXOpen). Core.vcxproj does NOT
+    import this file - Core must stay buildable without NX installed.
+
+    Resolution order for UGII_BASE_DIR:
+      1. An existing UGII_BASE_DIR environment variable (set automatically
+         when Visual Studio is launched from an NX Command Prompt - the
+         Siemens-recommended workflow, see docs/DevGuide.md).
+      2. NXOPEN_SDK_ROOT, an optional override you can set manually in
+         a user-level environment variable or in this file if #1 isn't
+         available in your setup.
+
+    TODO(office-PC verify): confirm this resolves to a real NX2406 install
+    on the target machine (Property Manager > Debugging > Environment, or
+    just echo %UGII_BASE_DIR% from the same shell VS was launched from).
+  -->
+  <PropertyGroup>
+    <UGII_BASE_DIR Condition="'$(UGII_BASE_DIR)'==''">$(NXOPEN_SDK_ROOT)</UGII_BASE_DIR>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NxOpenIncludeDir>$(UGII_BASE_DIR)\UGOPEN\include</NxOpenIncludeDir>
+    <NxOpenLibDir>$(UGII_BASE_DIR)\UGOPEN</NxOpenLibDir>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(NxOpenIncludeDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(NxOpenLibDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <!-- TODO(office-PC verify): exact .lib file names/versions under
+           %UGII_BASE_DIR%\UGOPEN for NX2406 - libNXOpenCpp.lib and
+           libNXOpenCppUI.lib are the commonly documented names across NX
+           versions, libufun.lib provides the low-level UF bridge used by
+           NxGeometryReader for bounding-box queries. -->
+      <AdditionalDependencies>libNXOpenCpp.lib;libNXOpenCppUI.lib;libufun.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>

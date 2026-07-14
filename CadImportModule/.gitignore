@@ -1,0 +1,18 @@
+# Build output
+build/
+*.obj
+*.pdb
+*.ilk
+*.exe
+*.lib
+*.exp
+
+# Visual Studio
+.vs/
+*.vcxproj.user
+*.sdf
+*.opensdf
+*.suo
+
+# JSON output produced by running the App
+scene.json

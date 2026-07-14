@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="include\NxBackend\NxConnector.h" />
+    <ClInclude Include="include\NxBackend\NxAssemblyReader.h" />
+    <ClInclude Include="include\NxBackend\NxGeometryReader.h" />
+    <ClInclude Include="include\NxBackend\NxMaterialReader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\NxConnector.cpp" />
+    <ClCompile Include="src\NxAssemblyReader.cpp" />
+    <ClCompile Include="src\NxGeometryReader.cpp" />
+    <ClCompile Include="src\NxMaterialReader.cpp" />
+  </ItemGroup>
+</Project>
