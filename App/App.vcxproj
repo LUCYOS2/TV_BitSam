@@ -40,7 +40,7 @@
 
   <!-- Links against NXOpen (via CadImportModule/NxBackend + RoiModule's
        NxBackend) - requires a real NX install. -->
-  <Import Project="$(SolutionDir)Shared\NxOpenSdk.props" />
+  <Import Project="$(SolutionDir)external\NxCadCore\Shared\NxOpenSdk.props" />
 
   <PropertyGroup>
     <OutDir>$(SolutionDir)build\$(Configuration)\$(Platform)\</OutDir>
@@ -53,7 +53,7 @@
       <SDLCheck>true</SDLCheck>
       <!-- App is the integration point - it's the only project that
            legitimately depends on both modules' Core/NxBackend layers. -->
-      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)CadImportModule\Core\include;$(SolutionDir)CadImportModule\NxBackend\include;$(SolutionDir)RoiModule\Core\include;$(SolutionDir)RoiModule\NxBackend\include;$(SolutionDir)Shared\NxContracts\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)external\NxCadCore\CadImportModule\Core\include;$(SolutionDir)external\NxCadCore\CadImportModule\NxBackend\include;$(SolutionDir)RoiModule\Core\include;$(SolutionDir)RoiModule\NxBackend\include;$(SolutionDir)external\NxCadCore\Shared\NxContracts\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -88,10 +88,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(SolutionDir)CadImportModule\Core\Core.vcxproj">
+    <ProjectReference Include="$(SolutionDir)external\NxCadCore\CadImportModule\Core\Core.vcxproj">
       <Project>{3A42BDF2-0A15-4188-AD79-184FE2855F9B}</Project>
     </ProjectReference>
-    <ProjectReference Include="$(SolutionDir)CadImportModule\NxBackend\NxBackend.vcxproj">
+    <ProjectReference Include="$(SolutionDir)external\NxCadCore\CadImportModule\NxBackend\NxBackend.vcxproj">
       <Project>{6C62B0A8-9A8A-42B4-8FA8-0CFE364AB081}</Project>
     </ProjectReference>
     <ProjectReference Include="$(SolutionDir)RoiModule\Core\Core.vcxproj">

@@ -57,7 +57,7 @@
            primitives (BoundingBox3D, OperationResult<T>, ILogger) - the
            intended dependency direction: RoiModule -> CadImportModule::Core
            (stable contracts), never the reverse. -->
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)CadImportModule\Core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)external\NxCadCore\CadImportModule\Core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -91,7 +91,7 @@
   <ItemGroup>
     <!-- Stable, NX-independent dependency on CadImportModule::Core only -
          never on CadImportModule::NxBackend. -->
-    <ProjectReference Include="$(SolutionDir)CadImportModule\Core\Core.vcxproj">
+    <ProjectReference Include="$(SolutionDir)external\NxCadCore\CadImportModule\Core\Core.vcxproj">
       <Project>{3A42BDF2-0A15-4188-AD79-184FE2855F9B}</Project>
     </ProjectReference>
   </ItemGroup>

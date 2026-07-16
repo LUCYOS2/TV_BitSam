@@ -39,7 +39,7 @@
 
   <!-- NX Open SDK Include/Lib paths - shared with CadImportModule/NxBackend
        and App. Requires a real NX installation (UGII_BASE_DIR) to build. -->
-  <Import Project="$(SolutionDir)Shared\NxOpenSdk.props" />
+  <Import Project="$(SolutionDir)external\NxCadCore\Shared\NxOpenSdk.props" />
 
   <PropertyGroup>
     <!-- TargetName override: both this project and CadImportModule's are
@@ -58,7 +58,7 @@
            NxGeometryUtils). Deliberately NOT including
            CadImportModule/NxBackend - this project must never depend on
            NxConnector concretely. -->
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)RoiModule\Core\include;$(SolutionDir)CadImportModule\Core\include;$(SolutionDir)Shared\NxContracts\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)RoiModule\Core\include;$(SolutionDir)external\NxCadCore\CadImportModule\Core\include;$(SolutionDir)external\NxCadCore\Shared\NxContracts\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -80,13 +80,13 @@
 
   <ItemGroup>
     <ClInclude Include="include\NxBackend\NxRoiResolver.h" />
-    <ClInclude Include="$(SolutionDir)Shared\NxContracts\include\NxContracts\INxSessionAccessor.h" />
-    <ClInclude Include="$(SolutionDir)Shared\NxContracts\include\NxContracts\NxGeometryUtils.h" />
+    <ClInclude Include="$(SolutionDir)external\NxCadCore\Shared\NxContracts\include\NxContracts\INxSessionAccessor.h" />
+    <ClInclude Include="$(SolutionDir)external\NxCadCore\Shared\NxContracts\include\NxContracts\NxGeometryUtils.h" />
   </ItemGroup>
 
   <ItemGroup>
     <ClCompile Include="src\NxRoiResolver.cpp" />
-    <ClCompile Include="$(SolutionDir)Shared\NxContracts\src\NxGeometryUtils.cpp" />
+    <ClCompile Include="$(SolutionDir)external\NxCadCore\Shared\NxContracts\src\NxGeometryUtils.cpp" />
   </ItemGroup>
 
   <ItemGroup>
@@ -95,7 +95,7 @@
     <ProjectReference Include="$(SolutionDir)RoiModule\Core\Core.vcxproj">
       <Project>{1A54B3FA-96BB-4C38-8015-FD59B97243CF}</Project>
     </ProjectReference>
-    <ProjectReference Include="$(SolutionDir)CadImportModule\Core\Core.vcxproj">
+    <ProjectReference Include="$(SolutionDir)external\NxCadCore\CadImportModule\Core\Core.vcxproj">
       <Project>{3A42BDF2-0A15-4188-AD79-184FE2855F9B}</Project>
     </ProjectReference>
   </ItemGroup>

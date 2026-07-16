@@ -5,9 +5,9 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CadImportModule", "CadImportModule", "{036AFC2C-718D-4759-BEF2-723ABDB3DC3D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "CadImportModule\Core\Core.vcxproj", "{3A42BDF2-0A15-4188-AD79-184FE2855F9B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "external\NxCadCore\CadImportModule\Core\Core.vcxproj", "{3A42BDF2-0A15-4188-AD79-184FE2855F9B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NxBackend", "CadImportModule\NxBackend\NxBackend.vcxproj", "{6C62B0A8-9A8A-42B4-8FA8-0CFE364AB081}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NxBackend", "external\NxCadCore\CadImportModule\NxBackend\NxBackend.vcxproj", "{6C62B0A8-9A8A-42B4-8FA8-0CFE364AB081}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RoiModule", "RoiModule", "{F20947FC-96AE-428B-B604-E9E726482712}"
 EndProject
