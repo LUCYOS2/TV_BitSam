@@ -10,7 +10,7 @@
 #include <NXOpen/NXException.hxx>
 #include <NXOpen/Assemblies/Component.hxx>
 
-#include "NxGeometryUtils.h"
+#include "NxContracts/NxGeometryUtils.h"
 
 using namespace CadImport::Core;
 
@@ -90,8 +90,9 @@ namespace CadImport::NxBackend
 
     BoundingBox3D NxGeometryReader::ComputeBoundingBox(NXOpen::Body* body)
     {
-        // Shared with NxRoiResolver - see NxGeometryUtils.h/.cpp for the
-        // actual UF call and its TODO(office-PC verify) notes.
-        return detail::ComputeBoundingBoxForTag(body);
+        // Shared with RoiModule's NxRoiResolver - see
+        // Shared/NxContracts/NxGeometryUtils.h/.cpp for the actual UF call
+        // and its TODO(office-PC verify) notes.
+        return NxContracts::ComputeBoundingBoxForTag(body);
     }
 }

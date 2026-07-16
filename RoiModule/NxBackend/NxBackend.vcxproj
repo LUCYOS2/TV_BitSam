@@ -13,17 +13,17 @@
 
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
-    <ProjectGuid>{E1902251-4526-4282-96DC-17F58ABF6C59}</ProjectGuid>
-    <RootNamespace>CadImportModule</RootNamespace>
+    <ProjectGuid>{3EF9CA36-9C43-418D-88CD-141B19450CB6}</ProjectGuid>
+    <RootNamespace>NxBackend</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
 
   <PropertyGroup Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <!-- v143 = VS2022 - see Core.vcxproj comment. Accept VS's "Retarget
-         Solution" prompt if the office PC has a different version. -->
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <!-- v143 = VS2022 - see CadImportModule/Core/Core.vcxproj comment.
+         Accept VS's "Retarget Solution" prompt if the office PC differs. -->
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -37,25 +37,31 @@
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
 
-  <!-- Links against NXOpen (via NxBackend) - requires a real NX install. -->
-  <Import Project="$(SolutionDir)NxOpenSdk.props" />
+  <!-- NX Open SDK Include/Lib paths - shared with CadImportModule/NxBackend
+       and App. Requires a real NX installation (UGII_BASE_DIR) to build. -->
+  <Import Project="$(SolutionDir)Shared\NxOpenSdk.props" />
 
   <PropertyGroup>
+    <!-- TargetName override: both this project and CadImportModule's are
+         named "NxBackend" - would otherwise collide on NxBackend.lib. -->
+    <TargetName>RoiNxBackend</TargetName>
     <OutDir>$(SolutionDir)build\$(Configuration)\$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)build\obj\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
+    <IntDir>$(SolutionDir)build\obj\RoiNxBackend\$(Configuration)\$(Platform)\</IntDir>
   </PropertyGroup>
 
   <ItemDefinitionGroup>
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)Core\include;$(SolutionDir)NxBackend\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <!-- Own include/ + RoiModule::Core + CadImportModule::Core (for
+           OperationResult<T> etc.) + Shared/NxContracts (INxSessionAccessor,
+           NxGeometryUtils). Deliberately NOT including
+           CadImportModule/NxBackend - this project must never depend on
+           NxConnector concretely. -->
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)RoiModule\Core\include;$(SolutionDir)CadImportModule\Core\include;$(SolutionDir)Shared\NxContracts\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
     <ClCompile>
@@ -73,15 +79,24 @@
   </ItemDefinitionGroup>
 
   <ItemGroup>
-    <ClCompile Include="src\main.cpp" />
+    <ClInclude Include="include\NxBackend\NxRoiResolver.h" />
+    <ClInclude Include="$(SolutionDir)Shared\NxContracts\include\NxContracts\INxSessionAccessor.h" />
+    <ClInclude Include="$(SolutionDir)Shared\NxContracts\include\NxContracts\NxGeometryUtils.h" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(SolutionDir)Core\Core.vcxproj">
-      <Project>{3A42BDF2-0A15-4188-AD79-184FE2855F9B}</Project>
+    <ClCompile Include="src\NxRoiResolver.cpp" />
+    <ClCompile Include="$(SolutionDir)Shared\NxContracts\src\NxGeometryUtils.cpp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- RoiModule::Core only - never CadImportModule::NxBackend (that's
+         the whole point of the INxSessionAccessor seam). -->
+    <ProjectReference Include="$(SolutionDir)RoiModule\Core\Core.vcxproj">
+      <Project>{1A54B3FA-96BB-4C38-8015-FD59B97243CF}</Project>
     </ProjectReference>
-    <ProjectReference Include="$(SolutionDir)NxBackend\NxBackend.vcxproj">
-      <Project>{6C62B0A8-9A8A-42B4-8FA8-0CFE364AB081}</Project>
+    <ProjectReference Include="$(SolutionDir)CadImportModule\Core\Core.vcxproj">
+      <Project>{3A42BDF2-0A15-4188-AD79-184FE2855F9B}</Project>
     </ProjectReference>
   </ItemGroup>
 

@@ -13,22 +13,22 @@
 #include <NXOpen/UF/UFSession.hxx>
 #include <NXOpen/Assemblies/Component.hxx>
 
-#include "NxGeometryUtils.h"
+#include "NxContracts/NxGeometryUtils.h"
 
 using namespace CadImport::Core;
 
 namespace CadImport::NxBackend
 {
-    NxRoiResolver::NxRoiResolver(NxConnector* connector, Core::ILogger* logger)
-        : m_connector(connector), m_logger(logger)
+    NxRoiResolver::NxRoiResolver(NxContracts::INxSessionAccessor* sessionAccessor, Core::ILogger* logger)
+        : m_sessionAccessor(sessionAccessor), m_logger(logger)
     {
     }
 
     OperationResult<ROISelection> NxRoiResolver::PromptSelectFace(const std::string& note)
     {
-        if (m_connector == nullptr || !m_connector->IsAvailable())
+        if (m_sessionAccessor == nullptr || !m_sessionAccessor->IsAvailable())
         {
-            return OperationResult<ROISelection>::Fail("NxConnector is not connected - call Connect() first");
+            return OperationResult<ROISelection>::Fail("NX session is not available - connect via CadImportModule first");
         }
 
         try
@@ -116,7 +116,7 @@ namespace CadImport::NxBackend
                 selection.componentName = (owner != nullptr) ? owner->Name() : std::string();
             }
 
-            selection.boundingBox = detail::ComputeBoundingBoxForTag(face);
+            selection.boundingBox = NxContracts::ComputeBoundingBoxForTag(face);
 
             // TODO(office-PC verify): Face area extraction - high-level
             // NXOpen doesn't expose area directly on Face; the documented

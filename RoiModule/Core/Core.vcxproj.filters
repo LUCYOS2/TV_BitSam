@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{2C8D9B20-0001-4000-8000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Models">
+      <UniqueIdentifier>{2C8D9B20-0001-4000-8000-000000000002}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ROI">
+      <UniqueIdentifier>{2C8D9B20-0001-4000-8000-000000000003}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ClInclude Include="include\Core\Models\ROISelection.h"><Filter>Models</Filter></ClInclude>
+    <ClInclude Include="include\Core\Interfaces\IROIManager.h"><Filter>Interfaces</Filter></ClInclude>
+    <ClInclude Include="include\Core\Interfaces\IRoiResolver.h"><Filter>Interfaces</Filter></ClInclude>
+    <ClInclude Include="include\Core\ROI\ROIManager.h"><Filter>ROI</Filter></ClInclude>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ClCompile Include="src\ROIManager.cpp"><Filter>ROI</Filter></ClCompile>
+  </ItemGroup>
+</Project>

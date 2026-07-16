@@ -1,10 +1,12 @@
-#include "Core/Export/JsonSceneExporter.h"
+#include "Export/JsonSceneExporter.h"
 
 #include <fstream>
 
-#include "Core/Export/JsonWriter.h"
+#include "Export/JsonWriter.h"
 
-namespace CadImport::Core
+using namespace CadImport::Core;
+
+namespace CadImport::App
 {
     namespace
     {

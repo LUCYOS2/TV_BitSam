@@ -13,7 +13,7 @@
 
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
-    <ProjectGuid>{3A42BDF2-0A15-4188-AD79-184FE2855F9B}</ProjectGuid>
+    <ProjectGuid>{1A54B3FA-96BB-4C38-8015-FD59B97243CF}</ProjectGuid>
     <RootNamespace>Core</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -22,12 +22,8 @@
 
   <PropertyGroup Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <!-- v143 = VS2022, the toolset most commonly paired with NX2406 at the
-         time of writing. If the office PC has a different VS version
-         installed, Visual Studio will offer to "Retarget Solution" the
-         first time this is opened there - accept it, don't hand-edit this
-         value speculatively. (Leaving this unset instead of pinning it
-         falls back to the ancient v100 toolset, which is worse.) -->
+    <!-- v143 = VS2022 - see CadImportModule/Core/Core.vcxproj comment.
+         Accept VS's "Retarget Solution" prompt if the office PC differs. -->
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -42,17 +38,26 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
 
   <PropertyGroup>
-    <!-- Core has ZERO dependency on NXOpen - this project must build with
-         a plain MSVC/Build Tools install, no NX installation required. -->
+    <!-- RoiModule::Core has ZERO dependency on NXOpen, same as
+         CadImportModule::Core - must build with a plain MSVC/Build Tools
+         install, no NX installation required. -->
+    <!-- TargetName override: both this project and CadImportModule's are
+         named "Core" (same RootNamespace/ProjectName), which would
+         otherwise both try to output Core.lib into the same OutDir. -->
+    <TargetName>RoiCore</TargetName>
     <OutDir>$(SolutionDir)build\$(Configuration)\$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)build\obj\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
+    <IntDir>$(SolutionDir)build\obj\RoiCore\$(Configuration)\$(Platform)\</IntDir>
   </PropertyGroup>
 
   <ItemDefinitionGroup>
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <!-- Depends on CadImportModule::Core for shared, NX-independent
+           primitives (BoundingBox3D, OperationResult<T>, ILogger) - the
+           intended dependency direction: RoiModule -> CadImportModule::Core
+           (stable contracts), never the reverse. -->
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)CadImportModule\Core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -73,22 +78,22 @@
   </ItemDefinitionGroup>
 
   <ItemGroup>
-    <ClInclude Include="include\Core\Models\BoundingBox3D.h" />
-    <ClInclude Include="include\Core\Models\SessionInfo.h" />
-    <ClInclude Include="include\Core\Models\ComponentInfo.h" />
-    <ClInclude Include="include\Core\Models\GeometryInfo.h" />
-    <ClInclude Include="include\Core\Models\MaterialInfo.h" />
-    <ClInclude Include="include\Core\Models\OperationResult.h" />
-    <ClInclude Include="include\Core\Interfaces\ILogger.h" />
-    <ClInclude Include="include\Core\Interfaces\INxSessionProvider.h" />
-    <ClInclude Include="include\Core\Interfaces\IAssemblyReader.h" />
-    <ClInclude Include="include\Core\Interfaces\IGeometryReader.h" />
-    <ClInclude Include="include\Core\Interfaces\IMaterialReader.h" />
-    <ClInclude Include="include\Core\Logging\ConsoleLogger.h" />
+    <ClInclude Include="include\Core\Models\ROISelection.h" />
+    <ClInclude Include="include\Core\Interfaces\IROIManager.h" />
+    <ClInclude Include="include\Core\Interfaces\IRoiResolver.h" />
+    <ClInclude Include="include\Core\ROI\ROIManager.h" />
   </ItemGroup>
 
   <ItemGroup>
-    <ClCompile Include="src\ConsoleLogger.cpp" />
+    <ClCompile Include="src\ROIManager.cpp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Stable, NX-independent dependency on CadImportModule::Core only -
+         never on CadImportModule::NxBackend. -->
+    <ProjectReference Include="$(SolutionDir)CadImportModule\Core\Core.vcxproj">
+      <Project>{3A42BDF2-0A15-4188-AD79-184FE2855F9B}</Project>
+    </ProjectReference>
   </ItemGroup>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

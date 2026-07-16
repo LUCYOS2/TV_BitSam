@@ -5,7 +5,7 @@
 
 using namespace CadImport::Core;
 
-namespace CadImport::NxBackend::detail
+namespace NxContracts
 {
     BoundingBox3D ComputeBoundingBoxForTag(NXOpen::TaggedObject* object)
     {

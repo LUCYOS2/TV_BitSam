@@ -1,10 +1,13 @@
-// CAD Import Module - CLI entry point.
+// CLI entry point that ties CadImportModule and RoiModule together.
 //
-// This is an External EXE (see docs/DevGuide.md for why): it acquires its
-// OWN NX session via NxConnector, opens the bookmark (.plmxl) passed on the
-// command line, reads the Assembly Tree / Geometry summary / Material
-// names, and writes a JSON Scene Manifest that downstream modules
-// (Material Engine, Ray Tracing) can consume.
+// This is an External EXE (see CadImportModule/docs/DevGuide.md for why):
+// it acquires its OWN NX session via NxConnector, opens the bookmark
+// (.plmxl) passed on the command line, reads the Assembly Tree / Geometry
+// summary / Material names (CadImportModule), optionally lets the user pick
+// ROI Face(s) (RoiModule), and writes a JSON Scene Manifest that downstream
+// modules (Material Engine, Ray Tracing) can consume. Combining both
+// modules' output types into one JSON is why JsonSceneExporter lives here
+// rather than in either module's Core - see Export/JsonSceneExporter.h.
 //
 // Usage:
 //   CadImportModule.exe --bookmark <path.plmxl> [--output <scene.json>] [--pick-roi]
@@ -20,8 +23,8 @@
 
 #include "Core/Logging/ConsoleLogger.h"
 #include "Core/ROI/ROIManager.h"
-#include "Core/Export/JsonSceneExporter.h"
 #include "Core/Models/ComponentInfo.h"
+#include "Export/JsonSceneExporter.h"
 
 #include "NxBackend/NxConnector.h"
 #include "NxBackend/NxAssemblyReader.h"
@@ -31,6 +34,7 @@
 
 using namespace CadImport::Core;
 using namespace CadImport::NxBackend;
+using namespace CadImport::App;
 
 namespace
 {

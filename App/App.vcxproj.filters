@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Export">
+      <UniqueIdentifier>{4D6E0A30-0001-4000-8000-000000000001}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Export\JsonWriter.h"><Filter>Export</Filter></ClInclude>
+    <ClInclude Include="src\Export\JsonSceneExporter.h"><Filter>Export</Filter></ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Export\JsonWriter.cpp"><Filter>Export</Filter></ClCompile>
+    <ClCompile Include="src\Export\JsonSceneExporter.cpp"><Filter>Export</Filter></ClCompile>
+  </ItemGroup>
+</Project>

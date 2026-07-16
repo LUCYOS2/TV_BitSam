@@ -37,10 +37,12 @@
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
 
-  <!-- NX Open SDK Include/Lib paths - see NxOpenSdk.props at solution root.
-       This project REQUIRES a real NX installation (UGII_BASE_DIR) to
-       build - it will not compile on a machine without NX/NXOpen SDK. -->
-  <Import Project="$(SolutionDir)NxOpenSdk.props" />
+  <!-- NX Open SDK Include/Lib paths - see Shared/NxOpenSdk.props (shared by
+       every NX-dependent project: CadImportModule/NxBackend,
+       RoiModule/NxBackend, App). This project REQUIRES a real NX
+       installation (UGII_BASE_DIR) to build - it will not compile on a
+       machine without NX/NXOpen SDK. -->
+  <Import Project="$(SolutionDir)Shared\NxOpenSdk.props" />
 
   <PropertyGroup>
     <OutDir>$(SolutionDir)build\$(Configuration)\$(Platform)\</OutDir>
@@ -51,7 +53,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)Core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)CadImportModule\Core\include;$(SolutionDir)Shared\NxContracts\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -76,8 +78,8 @@
     <ClInclude Include="include\NxBackend\NxAssemblyReader.h" />
     <ClInclude Include="include\NxBackend\NxGeometryReader.h" />
     <ClInclude Include="include\NxBackend\NxMaterialReader.h" />
-    <ClInclude Include="include\NxBackend\NxRoiResolver.h" />
-    <ClInclude Include="src\NxGeometryUtils.h" />
+    <ClInclude Include="$(SolutionDir)Shared\NxContracts\include\NxContracts\INxSessionAccessor.h" />
+    <ClInclude Include="$(SolutionDir)Shared\NxContracts\include\NxContracts\NxGeometryUtils.h" />
   </ItemGroup>
 
   <ItemGroup>
@@ -85,13 +87,12 @@
     <ClCompile Include="src\NxAssemblyReader.cpp" />
     <ClCompile Include="src\NxGeometryReader.cpp" />
     <ClCompile Include="src\NxMaterialReader.cpp" />
-    <ClCompile Include="src\NxRoiResolver.cpp" />
-    <ClCompile Include="src\NxGeometryUtils.cpp" />
+    <ClCompile Include="$(SolutionDir)Shared\NxContracts\src\NxGeometryUtils.cpp" />
   </ItemGroup>
 
   <ItemGroup>
     <!-- Depends on Core for interfaces/data models (DIP boundary) -->
-    <ProjectReference Include="$(SolutionDir)Core\Core.vcxproj">
+    <ProjectReference Include="$(SolutionDir)CadImportModule\Core\Core.vcxproj">
       <Project>{3A42BDF2-0A15-4188-AD79-184FE2855F9B}</Project>
     </ProjectReference>
   </ItemGroup>

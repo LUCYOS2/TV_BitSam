@@ -10,12 +10,6 @@
     <Filter Include="Logging">
       <UniqueIdentifier>{1E7C9A10-0001-4000-8000-000000000003}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ROI">
-      <UniqueIdentifier>{1E7C9A10-0001-4000-8000-000000000004}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Export">
-      <UniqueIdentifier>{1E7C9A10-0001-4000-8000-000000000005}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
 
   <ItemGroup>
@@ -24,25 +18,16 @@
     <ClInclude Include="include\Core\Models\ComponentInfo.h"><Filter>Models</Filter></ClInclude>
     <ClInclude Include="include\Core\Models\GeometryInfo.h"><Filter>Models</Filter></ClInclude>
     <ClInclude Include="include\Core\Models\MaterialInfo.h"><Filter>Models</Filter></ClInclude>
-    <ClInclude Include="include\Core\Models\ROISelection.h"><Filter>Models</Filter></ClInclude>
     <ClInclude Include="include\Core\Models\OperationResult.h"><Filter>Models</Filter></ClInclude>
     <ClInclude Include="include\Core\Interfaces\ILogger.h"><Filter>Interfaces</Filter></ClInclude>
     <ClInclude Include="include\Core\Interfaces\INxSessionProvider.h"><Filter>Interfaces</Filter></ClInclude>
     <ClInclude Include="include\Core\Interfaces\IAssemblyReader.h"><Filter>Interfaces</Filter></ClInclude>
     <ClInclude Include="include\Core\Interfaces\IGeometryReader.h"><Filter>Interfaces</Filter></ClInclude>
     <ClInclude Include="include\Core\Interfaces\IMaterialReader.h"><Filter>Interfaces</Filter></ClInclude>
-    <ClInclude Include="include\Core\Interfaces\IROIManager.h"><Filter>Interfaces</Filter></ClInclude>
-    <ClInclude Include="include\Core\Interfaces\IRoiResolver.h"><Filter>Interfaces</Filter></ClInclude>
     <ClInclude Include="include\Core\Logging\ConsoleLogger.h"><Filter>Logging</Filter></ClInclude>
-    <ClInclude Include="include\Core\ROI\ROIManager.h"><Filter>ROI</Filter></ClInclude>
-    <ClInclude Include="include\Core\Export\JsonWriter.h"><Filter>Export</Filter></ClInclude>
-    <ClInclude Include="include\Core\Export\JsonSceneExporter.h"><Filter>Export</Filter></ClInclude>
   </ItemGroup>
 
   <ItemGroup>
     <ClCompile Include="src\ConsoleLogger.cpp"><Filter>Logging</Filter></ClCompile>
-    <ClCompile Include="src\ROIManager.cpp"><Filter>ROI</Filter></ClCompile>
-    <ClCompile Include="src\JsonWriter.cpp"><Filter>Export</Filter></ClCompile>
-    <ClCompile Include="src\JsonSceneExporter.cpp"><Filter>Export</Filter></ClCompile>
   </ItemGroup>
 </Project>

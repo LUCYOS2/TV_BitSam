@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-namespace CadImport::Core
+namespace CadImport::App
 {
     // Minimal, dependency-free JSON writer purpose-built for the fixed
     // Scene Manifest schema this module exports. Not a general-purpose JSON

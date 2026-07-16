@@ -1,0 +1,56 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CadImportModule", "CadImportModule", "{036AFC2C-718D-4759-BEF2-723ABDB3DC3D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "CadImportModule\Core\Core.vcxproj", "{3A42BDF2-0A15-4188-AD79-184FE2855F9B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NxBackend", "CadImportModule\NxBackend\NxBackend.vcxproj", "{6C62B0A8-9A8A-42B4-8FA8-0CFE364AB081}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RoiModule", "RoiModule", "{F20947FC-96AE-428B-B604-E9E726482712}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RoiCore", "RoiModule\Core\Core.vcxproj", "{1A54B3FA-96BB-4C38-8015-FD59B97243CF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RoiNxBackend", "RoiModule\NxBackend\NxBackend.vcxproj", "{3EF9CA36-9C43-418D-88CD-141B19450CB6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "App", "App\App.vcxproj", "{E1902251-4526-4282-96DC-17F58ABF6C59}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3A42BDF2-0A15-4188-AD79-184FE2855F9B}.Debug|x64.ActiveCfg = Debug|x64
+		{3A42BDF2-0A15-4188-AD79-184FE2855F9B}.Debug|x64.Build.0 = Debug|x64
+		{3A42BDF2-0A15-4188-AD79-184FE2855F9B}.Release|x64.ActiveCfg = Release|x64
+		{3A42BDF2-0A15-4188-AD79-184FE2855F9B}.Release|x64.Build.0 = Release|x64
+		{6C62B0A8-9A8A-42B4-8FA8-0CFE364AB081}.Debug|x64.ActiveCfg = Debug|x64
+		{6C62B0A8-9A8A-42B4-8FA8-0CFE364AB081}.Debug|x64.Build.0 = Debug|x64
+		{6C62B0A8-9A8A-42B4-8FA8-0CFE364AB081}.Release|x64.ActiveCfg = Release|x64
+		{6C62B0A8-9A8A-42B4-8FA8-0CFE364AB081}.Release|x64.Build.0 = Release|x64
+		{1A54B3FA-96BB-4C38-8015-FD59B97243CF}.Debug|x64.ActiveCfg = Debug|x64
+		{1A54B3FA-96BB-4C38-8015-FD59B97243CF}.Debug|x64.Build.0 = Debug|x64
+		{1A54B3FA-96BB-4C38-8015-FD59B97243CF}.Release|x64.ActiveCfg = Release|x64
+		{1A54B3FA-96BB-4C38-8015-FD59B97243CF}.Release|x64.Build.0 = Release|x64
+		{3EF9CA36-9C43-418D-88CD-141B19450CB6}.Debug|x64.ActiveCfg = Debug|x64
+		{3EF9CA36-9C43-418D-88CD-141B19450CB6}.Debug|x64.Build.0 = Debug|x64
+		{3EF9CA36-9C43-418D-88CD-141B19450CB6}.Release|x64.ActiveCfg = Release|x64
+		{3EF9CA36-9C43-418D-88CD-141B19450CB6}.Release|x64.Build.0 = Release|x64
+		{E1902251-4526-4282-96DC-17F58ABF6C59}.Debug|x64.ActiveCfg = Debug|x64
+		{E1902251-4526-4282-96DC-17F58ABF6C59}.Debug|x64.Build.0 = Debug|x64
+		{E1902251-4526-4282-96DC-17F58ABF6C59}.Release|x64.ActiveCfg = Release|x64
+		{E1902251-4526-4282-96DC-17F58ABF6C59}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3A42BDF2-0A15-4188-AD79-184FE2855F9B} = {036AFC2C-718D-4759-BEF2-723ABDB3DC3D}
+		{6C62B0A8-9A8A-42B4-8FA8-0CFE364AB081} = {036AFC2C-718D-4759-BEF2-723ABDB3DC3D}
+		{1A54B3FA-96BB-4C38-8015-FD59B97243CF} = {F20947FC-96AE-428B-B604-E9E726482712}
+		{3EF9CA36-9C43-418D-88CD-141B19450CB6} = {F20947FC-96AE-428B-B604-E9E726482712}
+	EndGlobalSection
+EndGlobal

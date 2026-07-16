@@ -4,6 +4,7 @@
 
 #include "Core/Interfaces/INxSessionProvider.h"
 #include "Core/Interfaces/ILogger.h"
+#include "NxContracts/INxSessionAccessor.h"
 
 // Forward-declared to keep this header lightweight for App-side code that
 // only needs the interface pointer type. The .cpp includes the real
@@ -29,7 +30,12 @@ namespace CadImport::NxBackend
     // NOTE: The exact OpenBaseDisplay overload/parameter list should be
     // confirmed against the installed NX2406 PartCollection.hxx - it has
     // changed across NX versions.
-    class NxConnector : public Core::INxSessionProvider
+    //
+    // Also implements NxContracts::INxSessionAccessor so that other
+    // NX-dependent modules (e.g. RoiModule's NxRoiResolver) can reach the
+    // raw session without depending on NxConnector concretely - they take
+    // an INxSessionAccessor* instead.
+    class NxConnector : public Core::INxSessionProvider, public NxContracts::INxSessionAccessor
     {
     public:
         explicit NxConnector(Core::ILogger* logger);
@@ -39,11 +45,12 @@ namespace CadImport::NxBackend
         bool IsAvailable() const override;
         Core::OperationResult<Core::SessionInfo> GetSessionInfo() const override;
 
-        // Exposes the raw session pointer for the other NxBackend readers
-        // (NxAssemblyReader etc.) to use. Only valid after a successful
-        // Connect(). Not part of the Core interface on purpose - Core must
-        // never see an NXOpen type.
-        NXOpen::Session* RawSession() const;
+        // Exposes the raw session pointer for other NxBackend-level readers
+        // to use (NxAssemblyReader etc. within this module, and RoiModule's
+        // NxRoiResolver via the INxSessionAccessor interface). Only valid
+        // after a successful Connect(). Not part of INxSessionProvider on
+        // purpose - Core must never see an NXOpen type.
+        NXOpen::Session* RawSession() const override;
 
     private:
         Core::ILogger* m_logger;   // not owned

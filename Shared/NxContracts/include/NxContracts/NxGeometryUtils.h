@@ -1,8 +1,8 @@
 #pragma once
 
-// Internal helper shared by NxGeometryReader and NxRoiResolver - not part of
-// NxBackend's public include/ directory, since nothing outside NxBackend's
-// own .cpp files needs it.
+// Shared by CadImportModule's NxGeometryReader and RoiModule's
+// NxRoiResolver - lives in Shared/NxContracts (not either module's own
+// NxBackend) since both NX-dependent modules need it equally.
 
 #include "Core/Models/BoundingBox3D.h"
 
@@ -11,7 +11,7 @@ namespace NXOpen
     class TaggedObject;
 }
 
-namespace CadImport::NxBackend::detail
+namespace NxContracts
 {
     // Works for any taggable NX entity (Body, Face, ...) via
     // TaggedObject::Tag() - callers just need a pointer to the specific
@@ -19,5 +19,5 @@ namespace CadImport::NxBackend::detail
     //
     // TODO(office-PC verify): UF_MODL function name/signature (candidates:
     // AskBoundingBox, AskBoundingBoxExact) against the installed NX2406 SDK.
-    Core::BoundingBox3D ComputeBoundingBoxForTag(NXOpen::TaggedObject* object);
+    CadImport::Core::BoundingBox3D ComputeBoundingBoxForTag(NXOpen::TaggedObject* object);
 }

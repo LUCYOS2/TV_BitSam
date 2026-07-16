@@ -1,6 +1,6 @@
-#include "Core/Export/JsonWriter.h"
+#include "Export/JsonWriter.h"
 
-namespace CadImport::Core
+namespace CadImport::App
 {
     JsonWriter::JsonWriter() = default;
 
