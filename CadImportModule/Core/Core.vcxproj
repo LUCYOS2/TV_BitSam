@@ -86,6 +86,7 @@
     <ClInclude Include="include\Core\Interfaces\IGeometryReader.h" />
     <ClInclude Include="include\Core\Interfaces\IMaterialReader.h" />
     <ClInclude Include="include\Core\Interfaces\IROIManager.h" />
+    <ClInclude Include="include\Core\Interfaces\IRoiResolver.h" />
     <ClInclude Include="include\Core\Logging\ConsoleLogger.h" />
     <ClInclude Include="include\Core\ROI\ROIManager.h" />
     <ClInclude Include="include\Core\Export\JsonWriter.h" />

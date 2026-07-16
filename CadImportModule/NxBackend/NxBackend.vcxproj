@@ -76,6 +76,8 @@
     <ClInclude Include="include\NxBackend\NxAssemblyReader.h" />
     <ClInclude Include="include\NxBackend\NxGeometryReader.h" />
     <ClInclude Include="include\NxBackend\NxMaterialReader.h" />
+    <ClInclude Include="include\NxBackend\NxRoiResolver.h" />
+    <ClInclude Include="src\NxGeometryUtils.h" />
   </ItemGroup>
 
   <ItemGroup>
@@ -83,6 +85,8 @@
     <ClCompile Include="src\NxAssemblyReader.cpp" />
     <ClCompile Include="src\NxGeometryReader.cpp" />
     <ClCompile Include="src\NxMaterialReader.cpp" />
+    <ClCompile Include="src\NxRoiResolver.cpp" />
+    <ClCompile Include="src\NxGeometryUtils.cpp" />
   </ItemGroup>
 
   <ItemGroup>

@@ -8,8 +8,9 @@
 #include <NXOpen/Face.hxx>
 #include <NXOpen/Edge.hxx>
 #include <NXOpen/NXException.hxx>
-#include <NXOpen/UF/UFSession.hxx>
 #include <NXOpen/Assemblies/Component.hxx>
+
+#include "NxGeometryUtils.h"
 
 using namespace CadImport::Core;
 
@@ -89,29 +90,8 @@ namespace CadImport::NxBackend
 
     BoundingBox3D NxGeometryReader::ComputeBoundingBox(NXOpen::Body* body)
     {
-        BoundingBox3D box;
-
-        // TODO(office-PC verify): Bounding box is most reliably available
-        // via the low-level UF (User Function) bridge rather than a direct
-        // high-level NXOpen::Body method. Confirm the exact UF_MODL
-        // function name/signature (candidates: AskBoundingBox,
-        // AskBoundingBoxExact) and the tag-retrieval call
-        // (body->Tag() vs a dedicated conversion) against NX2406.
-        try
-        {
-            NXOpen::UF::UFSession* ufSession = NXOpen::UF::UFSession::GetUFSession();
-            double range[6] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-            ufSession->Modl.AskBoundingBox(body->Tag(), range);
-
-            box.min = { range[0], range[1], range[2] };
-            box.max = { range[3], range[4], range[5] };
-            box.valid = true;
-        }
-        catch (...)
-        {
-            box.valid = false;
-        }
-
-        return box;
+        // Shared with NxRoiResolver - see NxGeometryUtils.h/.cpp for the
+        // actual UF call and its TODO(office-PC verify) notes.
+        return detail::ComputeBoundingBoxForTag(body);
     }
 }

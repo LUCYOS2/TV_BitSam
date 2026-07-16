@@ -125,6 +125,11 @@ namespace CadImport::Core
             writer.Key("kind"); writer.Value(SelectionKindToString(sel.kind));
             writer.Key("targetId"); writer.Value(sel.targetId);
             writer.Key("note"); writer.Value(sel.note);
+            writer.Key("resolved"); writer.Value(sel.resolved);
+            writer.Key("componentName"); writer.Value(sel.componentName);
+            writer.Key("bodyId"); writer.Value(sel.bodyId);
+            writer.Key("area"); writer.Value(sel.area);
+            WriteBoundingBox(writer, sel.boundingBox);
             writer.EndObject();
         }
         writer.EndArray();

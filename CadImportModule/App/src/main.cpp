@@ -7,8 +7,14 @@
 // (Material Engine, Ray Tracing) can consume.
 //
 // Usage:
-//   CadImportModule.exe --bookmark <path.plmxl> [--output <scene.json>]
+//   CadImportModule.exe --bookmark <path.plmxl> [--output <scene.json>] [--pick-roi]
+//
+// --pick-roi is opt-in: it lets the user click Face(s) in the NX graphics
+// window to record ROI selections with real geometry (component/body/area/
+// boundingBox) attached - no JT file involved. It is a *blocking* step
+// (waits for user picks), so it is left out of the default automated run.
 
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -21,6 +27,7 @@
 #include "NxBackend/NxAssemblyReader.h"
 #include "NxBackend/NxGeometryReader.h"
 #include "NxBackend/NxMaterialReader.h"
+#include "NxBackend/NxRoiResolver.h"
 
 using namespace CadImport::Core;
 using namespace CadImport::NxBackend;
@@ -31,6 +38,7 @@ namespace
     {
         std::string bookmarkPath;
         std::string outputPath = "scene.json";
+        bool pickRoi = false;
         bool valid = false;
     };
 
@@ -48,9 +56,39 @@ namespace
             {
                 args.outputPath = argv[++i];
             }
+            else if (arg == "--pick-roi")
+            {
+                args.pickRoi = true;
+            }
         }
         args.valid = !args.bookmarkPath.empty();
         return args;
+    }
+
+    // Repeatedly prompts the user to pick a Face in the NX graphics window
+    // until they decline to continue or a pick attempt fails/cancels.
+    void RunInteractiveRoiPicking(NxRoiResolver& resolver, ROIManager& roiManager, ILogger& logger)
+    {
+        logger.Info("ROI picking: click a Face in the NX graphics window for each prompt.");
+
+        while (true)
+        {
+            std::cout << "Pick another ROI face? [y/n]: ";
+            std::string answer;
+            if (!std::getline(std::cin, answer) || (answer != "y" && answer != "Y"))
+            {
+                break;
+            }
+
+            OperationResult<ROISelection> result = resolver.PromptSelectFace("");
+            if (!result.success)
+            {
+                logger.Warn("ROI face pick did not complete: " + result.errorMessage);
+                continue;
+            }
+
+            roiManager.AddResolvedSelection(result.value);
+        }
     }
 
     void PrintTree(const ComponentInfo& node, int depth, ILogger& logger)
@@ -87,7 +125,7 @@ int main(int argc, char** argv)
     CliArgs args = ParseArgs(argc, argv);
     if (!args.valid)
     {
-        logger.Error("Usage: CadImportModule.exe --bookmark <path.plmxl> [--output <scene.json>]");
+        logger.Error("Usage: CadImportModule.exe --bookmark <path.plmxl> [--output <scene.json>] [--pick-roi]");
         return 1;
     }
 
@@ -154,10 +192,13 @@ int main(int argc, char** argv)
         }
     }
 
-    // ROI selection is a Placeholder in this phase - no selections are made
-    // automatically. ROIManager exists so the future ROI computation
-    // module has a stable interface to build on (see IROIManager.h).
     ROIManager roiManager(&logger);
+
+    if (args.pickRoi)
+    {
+        NxRoiResolver roiResolver(&connector, &logger);
+        RunInteractiveRoiPicking(roiResolver, roiManager, logger);
+    }
 
     JsonSceneExporter exporter;
     OperationResult<bool> writeResult = exporter.WriteToFile(

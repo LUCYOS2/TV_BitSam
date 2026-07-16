@@ -55,11 +55,11 @@ External EXE이므로 절차가 단순하다:
 
 | 프로젝트 | NX 필요 여부 | 개인 PC에서 빌드 가능? |
 |---|---|---|
-| Core | 불필요 | 가능 (단, 이 저장소 작성 시점 기준 개인 PC에 C++ 컴파일러 자체가 없어 실제 검증은 못 함 - 아래 참고) |
-| NxBackend | 필요 | 불가능 - 회사 PC 전용 |
+| Core | 불필요 | **가능 - 실제로 검증됨.** 개인 PC에 Visual Studio Build Tools(v145 toolset)가 설치되어 있어, `Core.vcxproj`를 MSBuild로 실제 빌드했고(경고/오류 0개), `ROIManager`/`JsonSceneExporter`/`ConsoleLogger`를 실행하는 스모크 테스트도 통과했다. |
+| NxBackend | 필요 | 불가능 - 회사 PC 전용 (NX2406 SDK 헤더/라이브러리가 있어야 컴파일 자체가 됨) |
 | App | 필요 (NxBackend에 의존) | 불가능 - 회사 PC 전용 |
 
-개인 PC에서 Core만이라도 컴파일 검증하고 싶다면: "Build Tools for Visual Studio"(무료, VS 전체 설치 불필요) 설치 후 `Core.vcxproj`만 별도로 빌드해볼 수 있다. 이번 단계에서는 설치하지 않았고, 코드 리뷰 수준으로만 검증했다.
+Core를 로컬에서 다시 빌드하려면 NX Command Prompt가 필요 없다(NX 비의존이므로) - 아무 Developer Command Prompt에서 `msbuild Core\Core.vcxproj /p:Configuration=Debug /p:Platform=x64`로 충분하다. `PlatformToolset`은 `v143`(VS2022)으로 고정해 두었으니, 설치된 버전이 다르면 `/p:PlatformToolset=<설치된 버전>`으로 오버라이드하거나 VS의 "Retarget Solution"을 사용할 것.
 
 ## 6. 예제 코드 위치
 
@@ -68,26 +68,46 @@ External EXE이므로 절차가 단순하다:
 | Session 연결 + 북마크 Open | `NxBackend/src/NxConnector.cpp` |
 | Work Part 읽기 | `NxConnector::GetSessionInfo()` |
 | Assembly 읽기 / Component 순회 | `NxBackend/src/NxAssemblyReader.cpp` (`BuildComponentInfo` 재귀 함수) |
-| Geometry 정보 읽기 (Body/Face/Edge/BoundingBox) | `NxBackend/src/NxGeometryReader.cpp` |
+| Geometry 정보 읽기 (Body/Face/Edge/BoundingBox) | `NxBackend/src/NxGeometryReader.cpp` (BoundingBox 로직은 `NxBackend/src/NxGeometryUtils.cpp`와 공유) |
 | Material 읽기 | `NxBackend/src/NxMaterialReader.cpp` |
+| 인터랙티브 ROI Face 피킹 + Geometry 추출 | `NxBackend/src/NxRoiResolver.cpp` |
 | 전체 흐름 조합 (CLI) | `App/src/main.cpp` |
-| ROI 확장 인터페이스 | `Core/include/Core/Interfaces/IROIManager.h` + `Core/include/Core/ROI/ROIManager.h` (Placeholder 구현) |
+| ROI 선택 기록 인터페이스 | `Core/include/Core/Interfaces/IROIManager.h` + `Core/include/Core/ROI/ROIManager.h` |
+| ROI 인터랙티브 해석 인터페이스 | `Core/include/Core/Interfaces/IRoiResolver.h` |
 
-## 7. ROI 기능을 확장하는 방법 (다음 단계용 메모)
+## 7. 인터랙티브 ROI 피킹 (JT 파일 없이 바로 Geometry 추출)
 
-현재 `IROIManager`는 사용자가 무엇을 선택했는지(Point/Face/Component ID)만 기록한다. 실제 ROI 계산(선택 영역을 지오메트리로 해석, Face를 Mesh로 변환)을 추가할 때는:
-1. `Core::ROISelection`에 필요한 필드를 추가 (예: 계산된 Area, 관련 Body ID 목록)
-2. `NxBackend`에 `NxRoiResolver` 같은 새 클래스를 만들어 `ROISelection`을 실제 NXOpen Face/Body로 해석
-3. `IGeometryReader`와의 연결 지점은 이미 `GeometryInfo::bodies`에 `bodyId`가 있으므로 그대로 재사용 가능
+**컨셉**: plmxml을 열어 NX Open API로 도면을 불러온 뒤, 사용자가 (이 EXE가 띄운) NX 화면에서 Face를 직접 클릭하면, 별도 JT/Mesh 파일 변환 없이 그 자리에서 살아있는 NX 세션으로부터 Geometry 데이터(소속 Component/Body, BoundingBox, Area)를 바로 뽑아낸다.
 
-`IROIManager`/`IGeometryReader` 인터페이스 자체는 바꾸지 않고 구현체만 추가/교체하는 것이 목표 (OCP: 확장에는 열려 있고 기존 코드 수정은 최소화).
+**사용법**: `App.exe --bookmark <path.plmxl> --pick-roi`
+- 조립체 트리/Geometry/Material을 다 읽은 뒤, 콘솔에 "Pick another ROI face? [y/n]"가 뜨면 `y` 입력 → NX 그래픽 창에서 Face를 클릭 → 자동으로 `ROISelection`에 결과가 채워져 `ROIManager`에 저장됨 → `n`을 입력하면 종료하고 JSON Export로 진행.
+- **주의(블로킹)**: `NxRoiResolver::PromptSelectFace`는 사용자가 클릭할 때까지 대기하는 동기 호출이다. 완전 자동/무인 배치 처리와는 상충되므로, `--pick-roi`를 안 주면 기존처럼 완전 자동으로 끝까지 실행된다 (opt-in).
 
-## 8. 회사 PC로 옮긴 후 첫 빌드 체크리스트
+**아키텍처**:
+- `Core::IRoiResolver` (NX 비의존 인터페이스) — `NxBackend::NxRoiResolver`가 구현
+- `Core::IROIManager`는 그대로 유지, `AddResolvedSelection()`만 추가 (OCP - 기존 메서드/책임 변경 없음)
+- `Core::ROISelection`에 `resolved`/`componentName`/`bodyId`/`area`/`boundingBox` 필드 추가
+
+**이번 단계에서 비어있는 부분**:
+- `ROISelection::area`는 아직 `0.0`으로 고정되어 있다 (`NxRoiResolver::BuildSelectionFromFace` 참고) - Face 면적은 고수준 NXOpen API로 바로 못 얻고 저수준 UF Mass-Properties 호출(`UF_MODL_ask_mass_props_3d` 계열)이 필요한데, 정확한 시그니처를 이번 세션에서 확정하지 못해 TODO로 남겨둠. 회사 PC에서 채워 넣을 것.
+- Point/Component 종류의 인터랙티브 지오메트리 해석은 아직 없음(Face만) - 동일한 `IRoiResolver`류 인터페이스를 추가해 확장 가능 (OCP).
+
+## 8. 이번에 새로 추가된 "확인 필요" API (회사 PC에서 대조)
+
+| 위치 | 확인해야 할 것 |
+|---|---|
+| `NxRoiResolver::PromptSelectFace` | `NXOpen::UI::GetUI()`, `ui->SelectionManager()` 정확한 접근자명/반환 타입 |
+| 〃 | `Selection::SelectTaggedObject`의 정확한 오버로드(파라미터 개수/순서) - NX8에서 `SelectObject`/`SelectObjects`가 Deprecated되고 이걸로 대체됨은 확인됨 |
+| 〃 | `Selection::MaskTriple`의 필드명 (`Type`/`Subtype`/`SolidBodySubtype`으로 가정) |
+| `NxRoiResolver::BuildSelectionFromFace` | Face Area 추출용 UF Mass-Properties 함수 시그니처 (현재 `area = 0.0` placeholder) |
+
+## 9. 회사 PC로 옮긴 후 첫 빌드 체크리스트
 
 - [ ] NX Command Prompt로 VS 실행 → `echo %UGII_BASE_DIR%`로 경로 확인
 - [ ] `CadImportModule.sln` 오픈
 - [ ] `NxOpenSdk.props`의 `AdditionalDependencies` 라이브러리 파일명이 실제 `%UGII_BASE_DIR%\UGOPEN` 폴더 내용과 일치하는지 확인
-- [ ] `Core` 빌드 (NX 없이도 성공해야 정상)
-- [ ] `NxBackend` 빌드 → 컴파일 에러 발생 시 이 문서의 "확인 필요" 표시된 API들(특히 `NxAssemblyReader::BuildComponentInfo`의 Visibility/Suppression 접근자, `NxGeometryReader::ComputeBoundingBox`의 UF 함수명, `NxMaterialReader`의 `PhysicalMaterial::GetBodies()`)부터 실제 헤더와 대조
+- [ ] `Core` 빌드 (NX 없이도 성공해야 정상 - 개인 PC에서 이미 검증됨)
+- [ ] `NxBackend` 빌드 → 컴파일 에러 발생 시 "확인 필요" 표시된 API들(위 7/8절 + `NxAssemblyReader::BuildComponentInfo`의 Visibility/Suppression 접근자, `NxMaterialReader`의 `PhysicalMaterial::GetBodies()`)부터 실제 헤더와 대조
 - [ ] `App` 빌드
 - [ ] 가상 북마크(.plmxl) 또는 테스트용 파트로 `App.exe --bookmark <path>` 실행하여 콘솔 출력과 `scene.json` 생성 확인
+- [ ] `App.exe --bookmark <path> --pick-roi` 실행 → NX 그래픽 창에서 Face 클릭 → `scene.json`의 `roiSelections`에 `resolved:true`와 실제 좌표/Body 정보가 채워지는지 확인, Area 계산 로직 채워 넣기

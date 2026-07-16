@@ -21,6 +21,17 @@ namespace CadImport::Core
         AddSelection(ROISelectionKind::Component, targetId, note);
     }
 
+    void ROIManager::AddResolvedSelection(const ROISelection& selection)
+    {
+        m_selections.push_back(selection);
+
+        if (m_logger)
+        {
+            m_logger->Info("ROIManager: resolved selection targetId=" + selection.targetId +
+                            " component=" + selection.componentName + " area=" + std::to_string(selection.area));
+        }
+    }
+
     void ROIManager::ClearSelections()
     {
         m_selections.clear();

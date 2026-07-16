@@ -32,6 +32,7 @@
     <ClInclude Include="include\Core\Interfaces\IGeometryReader.h"><Filter>Interfaces</Filter></ClInclude>
     <ClInclude Include="include\Core\Interfaces\IMaterialReader.h"><Filter>Interfaces</Filter></ClInclude>
     <ClInclude Include="include\Core\Interfaces\IROIManager.h"><Filter>Interfaces</Filter></ClInclude>
+    <ClInclude Include="include\Core\Interfaces\IRoiResolver.h"><Filter>Interfaces</Filter></ClInclude>
     <ClInclude Include="include\Core\Logging\ConsoleLogger.h"><Filter>Logging</Filter></ClInclude>
     <ClInclude Include="include\Core\ROI\ROIManager.h"><Filter>ROI</Filter></ClInclude>
     <ClInclude Include="include\Core\Export\JsonWriter.h"><Filter>Export</Filter></ClInclude>
