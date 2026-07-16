@@ -36,7 +36,7 @@ App.exe --bookmark <path.plmxml> [--output scene.json] [--pick-roi]
 ```
 
 - 개인 PC(NX 미설치): `CadImportModule/Core`, `RoiModule/Core`만 로컬에서 빌드/테스트 가능 (실제로 검증됨)
-- 회사 PC(NX2406 + Teamcenter): 전체 5개 프로젝트 빌드 - `CadImportModule/docs/DevGuide.md`의 첫 빌드 체크리스트 참고
+- 회사 PC(NX2406 + Teamcenter): 전체 5개 프로젝트 빌드 - **본 프로젝트에 머징하기 전, `docs/OfficeVerificationChecklist.md`의 단계별 검증 체크리스트를 먼저 통과시킬 것** (빌드 → 알려진 API 불확실성 대조 → 실제 조립체로 기능 검증 → JSON 스키마 확인)
 
 ## 이번 범위 밖
 
