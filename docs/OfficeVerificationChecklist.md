@@ -22,10 +22,10 @@
 2. [ ] `echo %UGII_BASE_DIR%`로 경로가 실제로 잡히는지 확인
 3. [ ] 저장소 루트의 `TV_BitSam.sln` 오픈
 4. [ ] `Shared/NxOpenSdk.props`의 `AdditionalDependencies`(`libNXOpenCpp.lib`, `libNXOpenCppUI.lib`, `libufun.lib`)가 실제 `%UGII_BASE_DIR%\UGOPEN` 폴더의 파일명과 일치하는지 확인, 다르면 교체
-5. [ ] `CadImportModule/Core` 빌드 → 성공해야 정상 (NX 비의존, 개인 PC에서 이미 검증됨)
+5. [ ] `external/NxCadCore/CadImportModule/Core` 빌드 → 성공해야 정상 (NX 비의존, 개인 PC에서 이미 검증됨)
 6. [ ] `RoiModule/Core` 빌드 → 성공해야 정상 (마찬가지로 NX 비의존)
 7. [ ] `RoiModule/tests/CoreTests` 빌드 후 `build\Debug\x64\CoreTests.exe` 실행 → **"All tests passed (25)"** 가 나와야 정상. NX와 완전히 무관한 프로젝트라 회사 PC/개인 PC 구분 없이 항상 통과해야 함 - 여기서 실패하면 NX 문제가 아니라 순수 C++ 회귀이므로 가장 먼저 원인 파악할 것
-8. [ ] `CadImportModule/NxBackend` 빌드 → 실패 시 Phase 2 표의 해당 항목부터 수정
+8. [ ] `external/NxCadCore/CadImportModule/NxBackend` 빌드 → 실패 시 Phase 2 표의 해당 항목부터 수정
 9. [ ] `RoiModule/NxBackend` 빌드 → 실패 시 Phase 2 표의 해당 항목부터 수정
 10. [ ] `App` 빌드 → 실패 시 위 4개가 먼저 통과했는지 확인 (프로젝트 참조 문제일 가능성)
 11. [ ] VS가 "Retarget Solution"을 제안하면 수락 (PlatformToolset이 `v143`으로 고정되어 있는데 설치된 VS 버전이 다를 수 있음)
@@ -38,14 +38,14 @@
 
 | 파일 | 위치(함수) | 확인할 것 |
 |---|---|---|
-| `CadImportModule/NxBackend/src/NxConnector.cpp` | `Connect()` | `PartCollection::OpenBaseDisplay`의 정확한 오버로드(파라미터 개수/순서, 특히 `PartLoadStatus**`) |
+| `external/NxCadCore/CadImportModule/NxBackend/src/NxConnector.cpp` | `Connect()` | `PartCollection::OpenBaseDisplay`의 정확한 오버로드(파라미터 개수/순서, 특히 `PartLoadStatus**`) |
 | 〃 | `GetSessionInfo()` | Revision/Unit을 읽는 정확한 접근자 (`BasePart`가 아니라 `Part`/`PartUnits`일 가능성) |
-| `CadImportModule/NxBackend/src/NxAssemblyReader.cpp` | `ReadTree()` | `workPart->ComponentAssembly()` 호출에 `dynamic_cast<NXOpen::Part*>` 다운캐스트가 필요한지 |
-| `CadImportModule/NxBackend/src/NxAssemblyReader.cpp` | `BuildComponentInfo()` | Visibility(`IsBlanked()` 등)/Suppression 상태를 읽는 정확한 접근자 (지금은 항상 `true`/`false` 고정값) |
-| `Shared/NxContracts/src/NxGeometryUtils.cpp` | `ComputeBoundingBoxForTag()` | UF_MODL 함수명(`AskBoundingBox` vs `AskBoundingBoxExact`)과 파라미터 순서 |
-| `Shared/NxContracts/src/NxGeometryUtils.cpp` | `BodiesOfComponent()` | ⚠️ **Phase 2-A와 직결, 확인 우선순위 최상위.** `Component::Prototype()`이 이 컴포넌트가 참조하는 `NXOpen::BasePart*`를 직접 반환(또는 안전하게 `dynamic_cast` 가능)하는지 - 아니면 `Prototype()->OwningPart()`처럼 한 단계 더 거쳐야 하는지 |
-| `Shared/NxContracts/src/NxGeometryUtils.cpp` | `CollectAllBodiesInWorkPart()` | `Part::ComponentAssembly()`가 `BasePart`가 아니라 `Part`에만 있는지 (있으면 `dynamic_cast<Part*>(workPart)` 유지, `NxAssemblyReader::ReadTree()`와 동일 전제) |
-| `CadImportModule/NxBackend/src/NxMaterialReader.cpp` | `ReadMaterial()` | `Part::PhysicalMaterials()`, `PhysicalMaterial::GetBodies()`가 실제 존재하는 이름인지 - 없으면 `UF_SF_ask_body_material` 저수준 API로 대체 |
+| `external/NxCadCore/CadImportModule/NxBackend/src/NxAssemblyReader.cpp` | `ReadTree()` | `workPart->ComponentAssembly()` 호출에 `dynamic_cast<NXOpen::Part*>` 다운캐스트가 필요한지 |
+| `external/NxCadCore/CadImportModule/NxBackend/src/NxAssemblyReader.cpp` | `BuildComponentInfo()` | Visibility(`IsBlanked()` 등)/Suppression 상태를 읽는 정확한 접근자 (지금은 항상 `true`/`false` 고정값) |
+| `external/NxCadCore/Shared/NxContracts/src/NxGeometryUtils.cpp` | `ComputeBoundingBoxForTag()` | UF_MODL 함수명(`AskBoundingBox` vs `AskBoundingBoxExact`)과 파라미터 순서 |
+| `external/NxCadCore/Shared/NxContracts/src/NxGeometryUtils.cpp` | `BodiesOfComponent()` | ⚠️ **Phase 2-A와 직결, 확인 우선순위 최상위.** `Component::Prototype()`이 이 컴포넌트가 참조하는 `NXOpen::BasePart*`를 직접 반환(또는 안전하게 `dynamic_cast` 가능)하는지 - 아니면 `Prototype()->OwningPart()`처럼 한 단계 더 거쳐야 하는지 |
+| `external/NxCadCore/Shared/NxContracts/src/NxGeometryUtils.cpp` | `CollectAllBodiesInWorkPart()` | `Part::ComponentAssembly()`가 `BasePart`가 아니라 `Part`에만 있는지 (있으면 `dynamic_cast<Part*>(workPart)` 유지, `NxAssemblyReader::ReadTree()`와 동일 전제) |
+| `external/NxCadCore/CadImportModule/NxBackend/src/NxMaterialReader.cpp` | `ReadMaterial()` | `Part::PhysicalMaterials()`, `PhysicalMaterial::GetBodies()`가 실제 존재하는 이름인지 - 없으면 `UF_SF_ask_body_material` 저수준 API로 대체 |
 | `RoiModule/NxBackend/src/NxRoiResolver.cpp` | `PromptSelectFace()` | `NXOpen::UI::GetUI()`, `ui->SelectionManager()` 정확한 접근자/반환 타입 |
 | 〃 | 〃 | `Selection::SelectTaggedObject`(단수형)의 정확한 오버로드(파라미터 개수/순서) |
 | 〃 | 〃 | `Selection::MaskTriple`의 필드명 (`Type`/`Subtype`/`SolidBodySubtype`으로 가정) |
@@ -61,7 +61,7 @@
 
 **확인된 사실 (프로젝트 담당자 확인, NX 헤더 대조 아님)**: 북마크(.plmxml)로 조립체를 열면 최상위 work part 자체는 Body가 하나도 없는 빈 컨테이너이고, 실제 형상(BLU의 Reflector/LGP/Diffuser/Prism/Bezel 등 각 레이어)은 **각 컴포넌트가 참조하는 개별 Part 파일**에 들어 있다. 즉 `workPart->Bodies()`를 그냥 호출하면 사실상 빈 리스트가 나온다.
 
-**이미 수정함**: `NxGeometryReader::ReadGeometry()`(기존 코드, `workPart->Bodies()` + `Body::OwningComponent()` 필터링 방식이었음)와 `NxRoiResolver`의 `ResolvePointAtCoordinate()`/`ExtractFacetMesh()`(이번에 추가, 마찬가지로 `workPart->Bodies()`를 직접 호출하던 방식)를 전부 `Shared/NxContracts`의 새 공유 헬퍼로 교체했다:
+**이미 수정함**: `NxGeometryReader::ReadGeometry()`(기존 코드, `workPart->Bodies()` + `Body::OwningComponent()` 필터링 방식이었음)와 `NxRoiResolver`의 `ResolvePointAtCoordinate()`/`ExtractFacetMesh()`(이번에 추가, 마찬가지로 `workPart->Bodies()`를 직접 호출하던 방식)를 전부 `external/NxCadCore/Shared/NxContracts`의 새 공유 헬퍼로 교체했다:
 
 - `NxContracts::BodiesOfComponent(component)` - 그 컴포넌트가 참조하는 Part 자신의 Body만 (재귀 아님)
 - `NxContracts::CollectAllBodies(component)` - 위를 서브트리 전체에 재귀 적용

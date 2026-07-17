@@ -2,7 +2,9 @@
 
 BLU 빛샘 분석 툴 프로젝트의 **ROI 지정 + Mesh/메타데이터 추출** 담당 모듈. `CadImportModule`이 열어놓은 NX 세션 위에서, 사용자가 지정한 ROI(Face 클릭 / Box 드래그 다중 선택 / 좌표 직접 지정 / Body 단위 로컬 스코프)의 실제 지오메트리 데이터(BoundingBox/Area/Facet Mesh)를 **별도 JT/Mesh 파일 없이** 살아있는 세션에서 바로 뽑아낸다.
 
-`CadImportModule`과는 물리적으로 분리된 별도 모듈이다 - 이 문서와 `CadImportModule/docs/DevGuide.md`를 함께 참고할 것.
+`CadImportModule`과는 물리적으로 분리된 별도 모듈이다 - 이 문서와 `external/NxCadCore/CadImportModule/docs/DevGuide.md`를 함께 참고할 것.
+
+**경로 안내**: `CadImportModule`/`Shared`는 여러 프로젝트가 함께 쓰는 공용 라이브러리라 `external/NxCadCore`(별도 저장소, git submodule)로 빠져 있다 - 아래 프로즈에 나오는 `CadImportModule/...`, `Shared/...`는 실제로는 `external/NxCadCore/CadImportModule/...`, `external/NxCadCore/Shared/...` 경로다 (의존 방향/설계 의도 설명이 목적이라 표기는 짧게 유지).
 
 ## 모듈 경계 (왜 NxConnector를 직접 참조하지 않는가)
 
