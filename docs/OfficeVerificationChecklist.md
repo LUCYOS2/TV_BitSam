@@ -8,9 +8,14 @@
 
 ## Phase 0 — 사전 확인
 
-- [ ] 이 저장소(`TV_BitSam/`)가 회사 PC에 clone되어 있다
+**회사 PC는 보안상 `git pull`/`clone`/`submodule update` 등 네트워크 git 동작이 불가능하고, 다운로드만 가능하다.** 그래서 아래 두 가지를 각각 따로 챙겨야 한다:
+
+- [ ] 이 저장소(`TV_BitSam/` 또는 이걸 가져간 BitSam 과제 프로젝트)를 ZIP 등으로 다운로드해서 회사 PC에 옮겨뒀다
+- [ ] ⚠️ **`external/NxCadCore`는 git submodule이라 위 ZIP에 내용이 안 들어있다** (GitHub "Download ZIP"은 서브모듈을 빈 폴더로만 남김) - `https://github.com/LUCYOS2/NxCadCore`를 **별도로** ZIP 다운로드해서 그 안의 파일들을 `external/NxCadCore/` 폴더 안에 직접 풀어넣을 것 (버전 확인: TV_BitSam 쪽 `git log external/NxCadCore` 최신 커밋 SHA와 맞는 버전인지 - 방금 세션 기준 `17b3052`)
 - [ ] NX2406, Teamcenter(TCE Managed Mode)가 설치되어 있고 라이선스가 유효하다
 - [ ] Visual Studio(NX2406과 호환되는 버전 - 통상 VS2022)가 설치되어 있다
+
+**회사 PC에서 고치거나 확인한 내용을 다시 반영할 때도 git push가 안 되므로**, 수정된 파일을 수동으로 반출(이메일/USB/공유 드라이브 등)해서 이 개인 PC(또는 다른 git 가능한 환경)에서 커밋해야 한다. 이때 중요한 점 - **`external/NxCadCore` 소속 파일(`CadImportModule/`, `Shared/`)을 고쳤다면, 그 수정은 BitSam 과제 프로젝트에만 반영하지 말고 반드시 `NxCadCore` 저장소 자체에도 반영할 것** - 그래야 나중에 NX_CrossCompare 쪽도 같은 수정의 혜택을 받는다 (오늘 세션에서 실제로 이 절차 그대로 한 번 해봤다: 패치 추출 → NxCadCore에 적용/커밋/푸시 → TV_BitSam의 서브모듈 포인터 갱신). `RoiModule`/`App` 소속 파일은 TV_BitSam(또는 BitSam 과제) 저장소에만 반영하면 된다.
 
 ---
 
