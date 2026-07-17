@@ -5,7 +5,7 @@
 ## 실행 방법
 
 ```
-MSBuild TV_BitSam.sln /t:RoiCoreTests /p:Configuration=Debug /p:Platform=x64
+MSBuild NX_RoiSelection.sln /t:RoiCoreTests /p:Configuration=Debug /p:Platform=x64
 build\Debug\x64\CoreTests.exe
 ```
 

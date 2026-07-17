@@ -37,7 +37,7 @@ RoiModule/
 
 ## 사용법
 
-`RoiModule` 자체는 실행 파일이 없다 - `TV_BitSam/App`이 이 모듈과 `CadImportModule`을 함께 링크해서 실행한다. ROI 지정 방식은 4가지이며 서로 독립적으로 조합 가능하다 (`IRoiResolver` 참고):
+`RoiModule` 자체는 실행 파일이 없다 - `NX_RoiSelection/App`이 이 모듈과 `CadImportModule`을 함께 링크해서 실행한다. ROI 지정 방식은 4가지이며 서로 독립적으로 조합 가능하다 (`IRoiResolver` 참고):
 
 ```
 App.exe --bookmark <path.plmxl> --pick-roi                    # Face 클릭 (1개씩, 인터랙티브)
