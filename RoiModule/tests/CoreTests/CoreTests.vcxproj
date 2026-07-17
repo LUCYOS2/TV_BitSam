@@ -13,17 +13,15 @@
 
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
-    <ProjectGuid>{1A54B3FA-96BB-4C38-8015-FD59B97243CF}</ProjectGuid>
-    <RootNamespace>Core</RootNamespace>
+    <ProjectGuid>{67482558-897C-49D8-84DD-E5915B85B0EF}</ProjectGuid>
+    <RootNamespace>CoreTests</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
 
   <PropertyGroup Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <!-- v143 = VS2022 - see CadImportModule/Core/Core.vcxproj comment.
-         Accept VS's "Retarget Solution" prompt if the office PC differs. -->
+    <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -38,29 +36,23 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
 
   <PropertyGroup>
-    <!-- RoiModule::Core has ZERO dependency on NXOpen, same as
-         CadImportModule::Core - must build with a plain MSVC/Build Tools
-         install, no NX installation required. -->
-    <!-- TargetName override: both this project and CadImportModule's are
-         named "Core" (same RootNamespace/ProjectName), which would
-         otherwise both try to output Core.lib into the same OutDir. -->
-    <TargetName>RoiCore</TargetName>
+    <!-- Exercises RoiModule::Core only - zero NXOpen dependency, must build
+         with a plain MSVC/Build Tools install like Core itself. -->
     <OutDir>$(SolutionDir)build\$(Configuration)\$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)build\obj\RoiCore\$(Configuration)\$(Platform)\</IntDir>
+    <IntDir>$(SolutionDir)build\obj\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
   </PropertyGroup>
 
   <ItemDefinitionGroup>
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <!-- Depends on CadImportModule::Core for shared, NX-independent
-           primitives (BoundingBox3D, OperationResult<T>, ILogger) - the
-           intended dependency direction: RoiModule -> CadImportModule::Core
-           (stable contracts), never the reverse. -->
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)external\NxCadCore\CadImportModule\Core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)RoiModule\Core\include;$(SolutionDir)CadImportModule\Core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
     <ClCompile>
@@ -78,23 +70,20 @@
   </ItemDefinitionGroup>
 
   <ItemGroup>
-    <ClInclude Include="include\Core\Models\ROISelection.h" />
-    <ClInclude Include="include\Core\Models\FacetMesh.h" />
-    <ClInclude Include="include\Core\Interfaces\IROIManager.h" />
-    <ClInclude Include="include\Core\Interfaces\IRoiResolver.h" />
-    <ClInclude Include="include\Core\ROI\ROIManager.h" />
-    <ClInclude Include="include\Core\ROI\RoiPickingWorkflows.h" />
+    <ClInclude Include="src\MiniTest.h" />
+    <ClInclude Include="src\SpyLogger.h" />
+    <ClInclude Include="src\MockRoiResolver.h" />
   </ItemGroup>
 
   <ItemGroup>
-    <ClCompile Include="src\ROIManager.cpp" />
-    <ClCompile Include="src\RoiPickingWorkflows.cpp" />
+    <ClCompile Include="src\main.cpp" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Stable, NX-independent dependency on CadImportModule::Core only -
-         never on CadImportModule::NxBackend. -->
-    <ProjectReference Include="$(SolutionDir)external\NxCadCore\CadImportModule\Core\Core.vcxproj">
+    <ProjectReference Include="$(SolutionDir)RoiModule\Core\Core.vcxproj">
+      <Project>{1A54B3FA-96BB-4C38-8015-FD59B97243CF}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(SolutionDir)CadImportModule\Core\Core.vcxproj">
       <Project>{3A42BDF2-0A15-4188-AD79-184FE2855F9B}</Project>
     </ProjectReference>
   </ItemGroup>

@@ -14,12 +14,15 @@
 
   <ItemGroup>
     <ClInclude Include="include\Core\Models\ROISelection.h"><Filter>Models</Filter></ClInclude>
+    <ClInclude Include="include\Core\Models\FacetMesh.h"><Filter>Models</Filter></ClInclude>
     <ClInclude Include="include\Core\Interfaces\IROIManager.h"><Filter>Interfaces</Filter></ClInclude>
     <ClInclude Include="include\Core\Interfaces\IRoiResolver.h"><Filter>Interfaces</Filter></ClInclude>
     <ClInclude Include="include\Core\ROI\ROIManager.h"><Filter>ROI</Filter></ClInclude>
+    <ClInclude Include="include\Core\ROI\RoiPickingWorkflows.h"><Filter>ROI</Filter></ClInclude>
   </ItemGroup>
 
   <ItemGroup>
     <ClCompile Include="src\ROIManager.cpp"><Filter>ROI</Filter></ClCompile>
+    <ClCompile Include="src\RoiPickingWorkflows.cpp"><Filter>ROI</Filter></ClCompile>
   </ItemGroup>
 </Project>
